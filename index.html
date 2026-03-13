@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bloom's Taxonomy Master Evaluator</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #1e293b;
+            --accent: #f59e0b;
+            --bg: #f8fafc;
+            --text: #0f172a;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            color: #64748b;
+            margin-bottom: 2rem;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 100px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        button {
+            margin-top: 1.5rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.1s, background-color 0.3s;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #1d4ed8;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .success-msg {
+            margin-top: 1rem;
+            color: #10b981;
+            font-weight: 500;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Bloom Master Evaluator</h1>
+    <p>Enter a technical topic to generate a comprehensive, multi-stage assessment prompt.</p>
+    
+    <textarea id="topicInput" placeholder="e.g., Python print function, Docker containers, Binary Search Trees..."></textarea>
+    
+    <button onclick="copyPrompt()">Copy Assessment Prompt</button>
+    <div id="successMessage" class="success-msg">Prompt copied to clipboard! Paste it into your favorite AI.</div>
+</div>
+
+<script>
+    function copyPrompt() {
+        const topic = document.getElementById('topicInput').value.trim();
+        
+        if (!topic) {
+            alert("Please enter a topic first!");
+            return;
+        }
+
+        // The Hidden Master Prompt
+        const masterPrompt = `You are an expert technical evaluator using Bloom's Taxonomy. Your goal is to assess the student's mastery of the topic: "${topic}".
+
+You will proceed through the stages of Bloom's Taxonomy in order:
+1. Remember
+2. Understand
+3. Apply
+4. Analyze
+5. Evaluate
+6. Create
+
+CORE RULES:
+- Start at the "Remember" stage.
+- Do not move to the next stage until you are 100% certain the student has conquered the current stage.
+- Use a wide variety of pedagogical tools: Multiple-choice, True/False, open-ended questions, sorting, listing, debugging scenarios, storytelling, and edge-case analysis.
+- Provide a "scaffolded" path: If the student struggles, offer subtle hints or break the challenge down into smaller pieces before re-assessing.
+- Be exhaustive. If a stage has multiple nuances, test every single one.
+- You have creative freedom to invent complex scenarios or logic puzzles relevant to "${topic}".
+- Maintain an internal assessment score. This can be a long-term interaction; never rush.
+- After every interaction, briefly state which Bloom stage we are currently in.
+
+Initial Action: Acknowledge the topic and present the first set of challenges for the 'Remember' stage. Do not explain the concept; test it immediately.`;
+
+        // Copy to clipboard
+        navigator.clipboard.writeText(masterPrompt).then(() => {
+            const msg = document.getElementById('successMessage');
+            msg.style.display = 'block';
+            setTimeout(() => {
+                msg.style.display = 'none';
+            }, 3000);
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+            alert("Oops! Something went wrong with the clipboard.");
+        });
+    }
+</script>
+
+</body>
+</html>
