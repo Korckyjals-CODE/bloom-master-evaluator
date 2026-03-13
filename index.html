@@ -3,20 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bloom's Taxonomy Master Evaluator</title>
+    <title>Bloom's One-Step Evaluator</title>
     <style>
         :root {
-            --primary: #2563eb;
+            --primary: #4f46e5;
             --secondary: #1e293b;
-            --accent: #f59e0b;
-            --bg: #f8fafc;
-            --text: #0f172a;
+            --bg: #f1f5f9;
+            --card: #ffffff;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, sans-serif;
             background-color: var(--bg);
-            color: var(--text);
+            color: var(--secondary);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -25,40 +24,34 @@
         }
 
         .container {
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            width: 90%;
-            max-width: 600px;
+            background: var(--card);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            width: 95%;
+            max-width: 550px;
             text-align: center;
         }
 
-        h1 {
-            color: var(--secondary);
-            margin-bottom: 0.5rem;
-        }
-
-        p {
-            color: #64748b;
-            margin-bottom: 2rem;
-        }
+        h1 { margin-bottom: 0.5rem; font-weight: 800; }
+        p { color: #64748b; margin-bottom: 2rem; font-size: 0.95rem; }
 
         textarea {
             width: 100%;
-            padding: 1rem;
+            padding: 1.2rem;
             border: 2px solid #e2e8f0;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 1rem;
-            resize: vertical;
-            min-height: 100px;
+            resize: none;
+            height: 120px;
             box-sizing: border-box;
-            transition: border-color 0.3s;
+            transition: all 0.2s;
         }
 
         textarea:focus {
             outline: none;
             border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
         }
 
         button {
@@ -66,85 +59,59 @@
             background-color: var(--primary);
             color: white;
             border: none;
-            padding: 1rem 2rem;
-            font-size: 1.1rem;
+            padding: 1rem;
+            font-size: 1rem;
             font-weight: 600;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: transform 0.1s, background-color 0.3s;
             width: 100%;
+            transition: opacity 0.2s;
         }
 
-        button:hover {
-            background-color: #1d4ed8;
-        }
+        button:hover { opacity: 0.9; }
 
-        button:active {
-            transform: scale(0.98);
-        }
-
-        .success-msg {
-            margin-top: 1rem;
+        .status {
+            margin-top: 1.2rem;
+            font-size: 0.85rem;
+            font-weight: 600;
             color: #10b981;
-            font-weight: 500;
-            display: none;
+            visibility: hidden;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Bloom Master Evaluator</h1>
-    <p>Enter a technical topic to generate a comprehensive, multi-stage assessment prompt.</p>
+    <h1>Bloom Master</h1>
+    <p>Enter your topic. I'll prepare a comprehensive, 1-by-1 assessment prompt for your AI.</p>
     
-    <textarea id="topicInput" placeholder="e.g., Python print function, Docker containers, Binary Search Trees..."></textarea>
+    <textarea id="topic" placeholder="e.g. 'JavaScript Closures' or 'Thermodynamics Laws'"></textarea>
     
-    <button onclick="copyPrompt()">Copy Assessment Prompt</button>
-    <div id="successMessage" class="success-msg">Prompt copied to clipboard! Paste it into your favorite AI.</div>
+    <button onclick="copyBloomPrompt()">Copy Sequential Prompt</button>
+    <div id="status" class="status">✓ Prompt ready! Paste it into ChatGPT or Claude.</div>
 </div>
 
 <script>
-    function copyPrompt() {
-        const topic = document.getElementById('topicInput').value.trim();
-        
-        if (!topic) {
-            alert("Please enter a topic first!");
-            return;
-        }
+    function copyBloomPrompt() {
+        const topic = document.getElementById('topic').value.trim();
+        if (!topic) return alert("Please enter a topic.");
 
-        // The Hidden Master Prompt
-        const masterPrompt = `You are an expert technical evaluator using Bloom's Taxonomy. Your goal is to assess the student's mastery of the topic: "${topic}".
+        const hiddenPrompt = `You are a high-level pedagogical evaluator. Your mission is to exhaustively assess the user's mastery of "${topic}" using the 6 stages of Bloom's Taxonomy (Remember, Understand, Apply, Analyze, Evaluate, Create).
 
-You will proceed through the stages of Bloom's Taxonomy in order:
-1. Remember
-2. Understand
-3. Apply
-4. Analyze
-5. Evaluate
-6. Create
+STRICT INTERACTION RULES:
+1. ONE QUESTION AT A TIME: You are strictly forbidden from asking multiple questions or presenting a list. You must present exactly one challenge or question, then stop and wait for the user's response.
+2. SEQUENTIAL MASTERY: Start at 'Remember'. Do not advance to the next Bloom stage until you have exhaustively verified mastery of the current one through various challenges.
+3. ADAPTIVE SCAFFOLDING: If the user fails or struggles, do not give the answer. Instead, provide a small hint or a simpler sub-challenge to build them back up.
+4. CREATIVE VARIETY: Use any format (MCQ, open-ended, debugging, storytelling, etc.) but always limited to one interaction at a time.
+5. NO SPOILERS: Do not explain the concept unless the user is stuck at the 'Remember' phase after multiple attempts. Focus on testing, not lecturing.
+6. TRANSPARENCY: Start every response by mentioning the current Bloom Stage in brackets, e.g., "[Stage: Analyze]".
 
-CORE RULES:
-- Start at the "Remember" stage.
-- Do not move to the next stage until you are 100% certain the student has conquered the current stage.
-- Use a wide variety of pedagogical tools: Multiple-choice, True/False, open-ended questions, sorting, listing, debugging scenarios, storytelling, and edge-case analysis.
-- Provide a "scaffolded" path: If the student struggles, offer subtle hints or break the challenge down into smaller pieces before re-assessing.
-- Be exhaustive. If a stage has multiple nuances, test every single one.
-- You have creative freedom to invent complex scenarios or logic puzzles relevant to "${topic}".
-- Maintain an internal assessment score. This can be a long-term interaction; never rush.
-- After every interaction, briefly state which Bloom stage we are currently in.
+Ready? Begin the 'Remember' stage for "${topic}" now with your first single question.`;
 
-Initial Action: Acknowledge the topic and present the first set of challenges for the 'Remember' stage. Do not explain the concept; test it immediately.`;
-
-        // Copy to clipboard
-        navigator.clipboard.writeText(masterPrompt).then(() => {
-            const msg = document.getElementById('successMessage');
-            msg.style.display = 'block';
-            setTimeout(() => {
-                msg.style.display = 'none';
-            }, 3000);
-        }).catch(err => {
-            console.error('Failed to copy: ', err);
-            alert("Oops! Something went wrong with the clipboard.");
+        navigator.clipboard.writeText(hiddenPrompt).then(() => {
+            const status = document.getElementById('status');
+            status.style.visibility = 'visible';
+            setTimeout(() => status.style.visibility = 'hidden', 4000);
         });
     }
 </script>
